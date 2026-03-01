@@ -1,0 +1,11 @@
+{
+  "data": {
+    "categoryUrlKey": "hommes"
+  },
+  "translations": {
+
+  },
+  "integrations": {
+    "require": ["magentoGraphql"]
+  }
+}

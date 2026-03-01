@@ -1,0 +1,17 @@
+{
+  "data": {
+    "categoryUrlKey": "women",
+    "attributes": [
+      {
+        "code": "climate"
+      },
+      {
+        "code": "style_general"
+      },
+      {
+        "code": "material"
+      }
+    ]
+  },
+  "translations": {}
+}
