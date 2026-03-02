@@ -1,1 +1,0 @@
-{"version":3,"file":"page-metadata-reader.js","sourceRoot":"","sources":["../../src/model/page-metadata-reader.ts"],"names":[],"mappings":";;;AAAA,kCAAgC;AAEhC,MAAa,kBAAkB;IAE3B,kBAAkB,GAAG,KAAK,EAAE,SAAiB,EAAE,EAAE;QAC7C,MAAM,OAAO,GAAG,MAAM,IAAA,UAAK,EACvB,iFAAiF,EACjF,CAAC,SAAS,CAAC,CACd,CAAC;QAEF,OAAO,OAAO,CAAA;IAClB,CAAC,CAAA;CACJ;AAVD,gDAUC"}
