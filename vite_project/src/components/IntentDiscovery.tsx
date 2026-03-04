@@ -10,6 +10,7 @@ import {IntentDiscoveryOptions} from "./IntentDiscoveryOptions.tsx";
 import {ProductRecommendations} from "./ProductRecommendations.tsx";
 import {activity} from "../activity";
 import {useIntentDecision} from "../hooks/domain/useIntentDecision.tsx";
+import {EvaluationOverlay} from "./EvaluationOverlay.tsx";
 
 export interface Props {
     config: IntentDiscoveryDataConfig
@@ -23,6 +24,7 @@ export const IntentDiscovery = ({ config, categoryData }: Props) => {
 
     const [showRightColumn, setShowRightColumn] = useState(false)
     const { shouldSearch } = useIntentDecision(attributeLayerData, config)
+    const [isEvaluating, setIsEvaluating] = useState(false)
 
     useEffect(() => {
         if (!attributeLayerData?.aggregations) return
@@ -37,18 +39,13 @@ export const IntentDiscovery = ({ config, categoryData }: Props) => {
 
     return (
         <>
-            {shouldSearch && (
-                <div className="intent-evaluation-overlay">
-                    <Spinner />
-                    <p>Evaluating your preferences…</p>
-                </div>
-            )}
+            {isEvaluating && <EvaluationOverlay />}
             <div className={showRightColumn ? "re-intent-layout re-intent-layout--two" : "re-intent-layout"}>
                 <div className="re-intent-col re-intent-col--left">
                     <AttributeLayer
                         config={config}
-                        categoryData={categoryData}
                         attributeLayerData={attributeLayerData}
+                        disabled={isEvaluating}
                     />
                     <IntentDiscoveryOptions
                         config={config}
@@ -63,6 +60,7 @@ export const IntentDiscovery = ({ config, categoryData }: Props) => {
                         attributeLayerData={attributeLayerData}
                         onVisibilityChange={setShowRightColumn}
                         shouldSearch={shouldSearch}
+                        setIsEvaluating={setIsEvaluating}
                     />
                 </div>
             </div>

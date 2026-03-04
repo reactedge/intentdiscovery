@@ -1,5 +1,4 @@
 import {useState} from "react";
-import type {MagentoCategory} from "../types/infra/magento/category.types.ts";
 import {useActiveAttributeState} from "../state/ActiveAttribute/useActiveAttributeState.ts";
 import {useSelectedPreferences} from "./selectedPreferencesUtils";
 import type {IntentDiscoveryDataConfig} from "../domain/intent-discovery.types.ts";
@@ -8,11 +7,11 @@ import type {MagentoAggregation, MagentoProducts} from "../hooks/infra/useProduc
 
 type Props = {
     config: IntentDiscoveryDataConfig;
-    categoryData: MagentoCategory;
     attributeLayerData: MagentoProducts
+    disabled: boolean
 };
 
-export const AttributeLayer = ({ config, attributeLayerData }: Props) => {
+export const AttributeLayer = ({ config, attributeLayerData, disabled }: Props) => {
     const { setActiveAttributeCode } = useActiveAttributeState();
     const {intentState} = useSystemState()
     const { valueFor: prefValue } =
@@ -42,10 +41,9 @@ export const AttributeLayer = ({ config, attributeLayerData }: Props) => {
 
     return (
         <>
-            {/*<SelectedPreferences categoryData={categoryData} intent={intent} />*/}
             <div className="finder">
                 <h2 className="finder__title">Need help choosing?</h2>
-                <div className="step-finder">
+                <div className={`step-finder ${disabled ? 'step-finder--disabled' : ''}`}>
                     {visibleAttributes.map((attr: MagentoAggregation) => (
                         <div
                             key={attr.attribute_code}

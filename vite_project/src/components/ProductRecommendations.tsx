@@ -10,13 +10,15 @@ export interface Props {
     attributeLayerData: MagentoProducts
     onVisibilityChange?: (visible: boolean) => void
     shouldSearch: boolean
+    setIsEvaluating: (status: boolean) => void
 }
 
 export const ProductRecommendations = ({
    categoryData,
    attributeLayerData,
    onVisibilityChange,
-   shouldSearch
+   shouldSearch,
+   setIsEvaluating
 }: Props) => {
     const { aiRecommendation, searchLoading, error } =
         useAnalyseSearch(
@@ -30,6 +32,10 @@ export const ProductRecommendations = ({
     useEffect(() => {
         onVisibilityChange?.(hasSuggestions)
     }, [hasSuggestions, onVisibilityChange])
+
+    useEffect(() => {
+        setIsEvaluating(searchLoading);
+    }, [searchLoading]);
 
     if (!shouldSearch) return null;
     if (searchLoading) return <Spinner />;
