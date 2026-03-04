@@ -8,6 +8,9 @@ import {ErrorState} from "./global/ErrorState.tsx";
 import {AttributeLayer} from "./AttributeLayer.tsx";
 import {IntentDiscoveryOptions} from "./IntentDiscoveryOptions.tsx";
 import {ProductRecommendations} from "./ProductRecommendations.tsx";
+import {activity} from "../activity";
+import {useIntentDecision} from "../hooks/domain/useIntentDecision.tsx";
+import {EvaluationOverlay} from "./EvaluationOverlay.tsx";
 
 export interface Props {
     config: IntentDiscoveryDataConfig
@@ -20,6 +23,8 @@ export const IntentDiscovery = ({ config, categoryData }: Props) => {
         useFindAttributeLayer(categoryData);
 
     const [showRightColumn, setShowRightColumn] = useState(false)
+    const { shouldSearch } = useIntentDecision(attributeLayerData, config)
+    const [isEvaluating, setIsEvaluating] = useState(false)
 
     useEffect(() => {
         if (!attributeLayerData?.aggregations) return
@@ -27,32 +32,38 @@ export const IntentDiscovery = ({ config, categoryData }: Props) => {
     }, [config.categoryUrlKey, setActiveCategoryName, attributeLayerData?.aggregations]);
 
     if (attributeLayerLoading) return <Spinner />;
-    if (attributeLayerError) return <ErrorState />;
+    if (attributeLayerError) return <ErrorState error={attributeLayerError}  />;
     if (!attributeLayerData) return null;
 
-    return (
-        <div className={showRightColumn ? "re-intent-layout re-intent-layout--two" : "re-intent-layout"}>
-            <div className="re-intent-col re-intent-col--left">
-                <AttributeLayer
-                    config={config}
-                    categoryData={categoryData}
-                    attributeLayerData={attributeLayerData}
-                />
-                <IntentDiscoveryOptions
-                    config={config}
-                    categoryData={categoryData}
-                    attributeLayerData={attributeLayerData}
-                />
-            </div>
+    activity('attribute-layer', 'Attribute Layer', attributeLayerData);
 
-            <div className="re-intent-col re-intent-col--right">
-                <ProductRecommendations
-                    config={config}
-                    categoryData={categoryData}
-                    attributeLayerData={attributeLayerData}
-                    onVisibilityChange={setShowRightColumn}
-                />
+    return (
+        <>
+            {isEvaluating && <EvaluationOverlay />}
+            <div className={showRightColumn ? "re-intent-layout re-intent-layout--two" : "re-intent-layout"}>
+                <div className="re-intent-col re-intent-col--left">
+                    <AttributeLayer
+                        config={config}
+                        attributeLayerData={attributeLayerData}
+                        disabled={isEvaluating}
+                    />
+                    <IntentDiscoveryOptions
+                        config={config}
+                        categoryData={categoryData}
+                        attributeLayerData={attributeLayerData}
+                    />
+                </div>
+
+                <div className="re-intent-col re-intent-col--right">
+                    <ProductRecommendations
+                        categoryData={categoryData}
+                        attributeLayerData={attributeLayerData}
+                        onVisibilityChange={setShowRightColumn}
+                        shouldSearch={shouldSearch}
+                        setIsEvaluating={setIsEvaluating}
+                    />
+                </div>
             </div>
-        </div>
+        </>
     );
 };

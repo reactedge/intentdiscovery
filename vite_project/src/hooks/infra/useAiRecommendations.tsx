@@ -29,7 +29,8 @@ export interface AiRecommendationResponse {
 
 export function useAiRecommendations(
     attributeData: MagentoAggregation[] | undefined,
-    productData: GraphqlProduct[] | undefined
+    productData: GraphqlProduct[] | undefined,
+    enabled: boolean
 ) {
     const { intentState } = useSystemState()
 
@@ -40,7 +41,7 @@ export function useAiRecommendations(
     const { intentApiClient } = useSystemState();
 
     const load = useCallback(async () => {
-        if (!intentState || !attributeData?.length || !productData?.length) return
+        if (!intentState || !attributeData?.length || !productData?.length || !enabled) return
 
         setLoading(true)
         setError(null)

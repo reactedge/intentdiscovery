@@ -1,32 +1,28 @@
-import { useState } from "react";
-import type { MagentoCategory } from "../types/infra/magento/category.types.ts";
-import { useActiveAttributeState } from "../state/ActiveAttribute/useActiveAttributeState.ts";
-import { useSelectedPreferences } from "./selectedPreferencesUtils";
+import {useState} from "react";
+import {useActiveAttributeState} from "../state/ActiveAttribute/useActiveAttributeState.ts";
+import {useSelectedPreferences} from "./selectedPreferencesUtils";
 import type {IntentDiscoveryDataConfig} from "../domain/intent-discovery.types.ts";
 import {useSystemState} from "../state/System/useSystemState.ts";
-import {getExcludedAttributes} from "../lib/attributes.ts";
 import type {MagentoAggregation, MagentoProducts} from "../hooks/infra/useProductAttributeLayer.tsx";
 
 type Props = {
     config: IntentDiscoveryDataConfig;
-    categoryData: MagentoCategory;
     attributeLayerData: MagentoProducts
+    disabled: boolean
 };
 
-export const AttributeLayer = ({ config, attributeLayerData }: Props) => {
+export const AttributeLayer = ({ config, attributeLayerData, disabled }: Props) => {
     const { setActiveAttributeCode } = useActiveAttributeState();
     const {intentState} = useSystemState()
-    const excludeCodes = getExcludedAttributes(config.attributes)
-
     const { valueFor: prefValue } =
         useSelectedPreferences(attributeLayerData, intentState);
 
     const [showAll, setShowAll] = useState(false);
 
     const allAttributes = (attributeLayerData?.aggregations || []).filter(
-        (attr: MagentoAggregation) => !excludeCodes?.includes(attr.attribute_code)
+        (attr: MagentoAggregation) => !config.attributeExcludedInLayer?.includes(attr.attribute_code)
     );
-    const visibleAttributes = showAll ? allAttributes : allAttributes.slice(0, 4);
+    const visibleAttributes = showAll ? allAttributes : allAttributes.slice(0, 3);
 
     const isAttributeSelected = (attributeCode: string): boolean => {
         // Check if attribute is in attributeScore
@@ -45,9 +41,9 @@ export const AttributeLayer = ({ config, attributeLayerData }: Props) => {
 
     return (
         <>
-            {/*<SelectedPreferences categoryData={categoryData} intent={intent} />*/}
             <div className="finder">
-                <div className="step-finder">
+                <h2 className="finder__title">Need help choosing?</h2>
+                <div className={`step-finder ${disabled ? 'step-finder--disabled' : ''}`}>
                     {visibleAttributes.map((attr: MagentoAggregation) => (
                         <div
                             key={attr.attribute_code}
