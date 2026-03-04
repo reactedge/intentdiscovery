@@ -1,6 +1,7 @@
 {
   "data": {
     "enabledCategories": [
+      "men",
       "tops-women",
       "tops-men"
     ],
@@ -17,13 +18,13 @@
       "style_bottom"
     ],
     "labelMap": {
-      "style_general": "Do you have a style of preference?",
-      "climate": "Do you know the type of weather you need this clothing for?",
-      "material": "Let's decide on the material upfront, shall we?",
-      "size": "Let's decide on the size now?",
-      "price": "Let's narrow the price range?",
-      "pattern": "Do you have a preference for the pattern?",
-      "color": "Do you have a preference for the color?",
+      "style_general": "Do you have a style preference?",
+      "climate": "What kind of weather are you shopping for?",
+      "material": "What material do you prefer?",
+      "size": "What size are you looking for?",
+      "price": "What price range works for you?",
+      "pattern": "Do you have a pattern preference?",
+      "color": "Do you have a color preference?",
       "result": "Here are your best matches"
     },
     "ai": {

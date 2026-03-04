@@ -52,10 +52,6 @@ export const IntentDiscoveryOptions = ({ config, categoryData, attributeLayerDat
 
     return (
         <div className="finder">
-            <h2 className="finder__title">
-                Let's roll up our sleeves, put some sweat in this search
-            </h2>
-
             <FinderRow>
                 <p className="finder__label">{stepLabel}</p>
                 {renderStep()}

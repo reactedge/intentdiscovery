@@ -6,7 +6,7 @@ import {getMountedHost} from "./widget-runtime/lib/hostReader.ts";
 export const WIDGET_ID = 'intentdiscovery';
 
 export function mountWidget(hostElement: HTMLElement) {
-    const mountedHost = getMountedHost(hostElement);;
+    const mountedHost = getMountedHost(hostElement);
 
     activity('bootstrap', 'Widget mounted', hostElement);
 

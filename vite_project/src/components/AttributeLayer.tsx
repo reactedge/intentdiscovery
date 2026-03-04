@@ -23,7 +23,7 @@ export const AttributeLayer = ({ config, attributeLayerData }: Props) => {
     const allAttributes = (attributeLayerData?.aggregations || []).filter(
         (attr: MagentoAggregation) => !config.attributeExcludedInLayer?.includes(attr.attribute_code)
     );
-    const visibleAttributes = showAll ? allAttributes : allAttributes.slice(0, 4);
+    const visibleAttributes = showAll ? allAttributes : allAttributes.slice(0, 3);
 
     const isAttributeSelected = (attributeCode: string): boolean => {
         // Check if attribute is in attributeScore
@@ -44,6 +44,7 @@ export const AttributeLayer = ({ config, attributeLayerData }: Props) => {
         <>
             {/*<SelectedPreferences categoryData={categoryData} intent={intent} />*/}
             <div className="finder">
+                <h2 className="finder__title">Need help choosing?</h2>
                 <div className="step-finder">
                     {visibleAttributes.map((attr: MagentoAggregation) => (
                         <div
