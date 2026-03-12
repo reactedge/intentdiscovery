@@ -5,6 +5,7 @@ import type {MagentoAggregation} from "./useProductAttributeLayer.tsx";
 import {useDebounce} from "../useDebounce.tsx";
 import {buildAiInterpretationPayload} from "../../lib/ai-recommendations.ts";
 import {useOptionLabelMap} from "../domain/useOptionLabelMap.ts";
+import type {IntentControllerState} from "../../domain/intent.types.ts";
 
 export type AiInterpretationRequest = {
     intent: {
@@ -28,8 +29,7 @@ export type AiInterpretationResponse = {
 
 export function useAiInterpreter(
     attributeData: MagentoAggregation[],
-    intentText: string,
-    enabled: boolean
+    intent: IntentControllerState,
 ) {
 
     const { intentState, setPreference, intentApiClient } = useSystemState()
@@ -39,10 +39,10 @@ export function useAiInterpreter(
     const [error, setError] = useState<Error | null>(null)
     const optionLabelMap = useOptionLabelMap(attributeData);
 
-    const debouncedIntent = useDebounce(intentText, 600)
+    const debouncedIntent = useDebounce(intent.text, 600)
 
     const load = useCallback(async () => {
-        if (!enabled || loading) return
+        if (!intent.canBeInterpreted || loading) return
 
         setLoading(true)
         setError(null)
@@ -79,7 +79,7 @@ export function useAiInterpreter(
             setLoading(false)
         }
 
-    }, [intentState, debouncedIntent, attributeData, optionLabelMap, enabled])
+    }, [intentState, debouncedIntent, attributeData, optionLabelMap, intent.canBeInterpreted])
 
     useEffect(() => {
         activity('ai-interpretation', 'Triggering interpretation')

@@ -23,6 +23,7 @@ export interface ResolvedIntentDiscoveryConfig {
     readonly data: IntentDiscoveryDataConfig;
     readonly integrations: ReactEdgeRuntimeIntegrations;
     readonly translations: IntentDiscoveryTranslationsConfig
+    readonly storeCode: string
 }
 
 export type IntentDiscoveryTranslationsConfig = Record<string, string> | undefined;

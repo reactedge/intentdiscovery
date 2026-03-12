@@ -1,29 +1,22 @@
 import { useState} from "react";
-import {useActiveAttributeState} from "../state/ActiveAttribute/useActiveAttributeState.ts";
-import {useSelectedPreferences} from "./selectedPreferencesUtils";
-import type {IntentDiscoveryDataConfig} from "../domain/intent-discovery.types.ts";
-import {useSystemState} from "../state/System/useSystemState.ts";
-import type {MagentoAggregation, MagentoProducts} from "../hooks/infra/useProductAttributeLayer.tsx";
-import {IntentMessage} from "./IntentMessage.tsx";
-import {useIntentAttributes} from "../hooks/domain/useIntentAttributes.tsx";
-import {Icon} from "./AttributeLayer/Icon.tsx";
-import {useTranslationState} from "../state/Translation/useTranslationState.ts";
+import {useActiveAttributeState} from "../../state/ActiveAttribute/useActiveAttributeState.ts";
+import {useSelectedPreferences} from "../SelectionsSummary/selectedPreferencesUtils.ts";
+import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.types.ts";
+import {useSystemState} from "../../state/System/useSystemState.ts";
+import type {MagentoAggregation, MagentoProducts} from "../../hooks/infra/useProductAttributeLayer.tsx";
+import {useIntentAttributes} from "../../hooks/domain/useIntentAttributes.tsx";
+import {Icon} from "../AttributeLayer/Icon.tsx";
+import {useTranslationState} from "../../state/Translation/useTranslationState.ts";
 
 type Props = {
     config: IntentDiscoveryDataConfig
     attributeLayerData: MagentoProducts
-    intent: {
-        text: string
-        onChange: (intent: string) => void
-        shouldInterpret: boolean
-    }
     disabled: boolean
 }
 
 export const AttributeLayer = ({
        config,
        attributeLayerData,
-       intent,
        disabled
     }: Props) => {
     const { setActiveAttributeCode } = useActiveAttributeState();
@@ -54,14 +47,6 @@ export const AttributeLayer = ({
 
     return (
             <div className="finder">
-                <h2 className="finder__title">{t("May I ask why you came here to shop?")}</h2>
-                <IntentMessage
-                    config={config}
-                    shouldInterpret={intent.shouldInterpret}
-                    intentText={intent.text}
-                    onIntentChange={intent.onChange}
-                    attributeLayerData={attributeLayerData}
-                />
                 <label className="intent-subtitle">
                     {t("Describe what you're looking for")}
                 </label>
@@ -92,7 +77,7 @@ export const AttributeLayer = ({
                             className="choice-tile choice-tile--view-all"
                             onClick={() => setShowAll(prev => !prev)}
                         >
-                            {showAll ? "Show less" : "View all"}
+                            {showAll ? t("Show less") : t("View all")}
                         </button>
                     )}
                 </div>

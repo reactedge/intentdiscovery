@@ -1,9 +1,10 @@
-import type {MagentoProducts} from "../hooks/infra/useProductAttributeLayer.tsx";
-import {useAnalyseSearch} from "../hooks/domain/useAnalyseSearch.tsx";
-import type {CategoryData} from "../types/infra/magento/category.types.ts";
-import {Spinner} from "./global/Spinner.tsx";
-import {SuggestionContainer} from "./Suggestions/SuggestionContainer.tsx";
+import type {MagentoProducts} from "../../hooks/infra/useProductAttributeLayer.tsx";
+import {useAnalyseSearch} from "../../hooks/domain/useAnalyseSearch.tsx";
+import type {CategoryData} from "../../types/infra/magento/category.types.ts";
+import {Spinner} from "../global/Spinner.tsx";
+import {SuggestionContainer} from "../Suggestions/SuggestionContainer.tsx";
 import {useEffect} from "react";
+import {useTranslationState} from "../../state/Translation/useTranslationState.ts";
 
 type Props = {
     categoryData: CategoryData
@@ -29,6 +30,7 @@ export const ProductRecommendations = ({
         );
 
     const hasSuggestions = !!aiRecommendation?.suggestions?.length
+    const {t} = useTranslationState()
 
     useEffect(() => {
         onVisibilityChange?.(hasSuggestions)
@@ -47,7 +49,7 @@ export const ProductRecommendations = ({
             data={aiRecommendation}
             loading={searchLoading}
             error={error?.message ?? null}
-            title="AI suggestions"
+            title={t("AI suggestions")}
         />
     )
 }

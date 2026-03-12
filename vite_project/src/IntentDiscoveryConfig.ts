@@ -26,15 +26,16 @@ export async function readWidgetConfig(
     hostElement: HTMLElement
 ): Promise<ResolvedIntentDiscoveryConfig> {
 
-    const contract = await loadContract(hostElement);
+    const {storeCode, json: contract} = await loadContract(hostElement);
 
     const runtime = readIntegrationConfig();
-    const resolved = resolveIntentDiscoveryConfig(contract, runtime);
+    const resolved = resolveIntentDiscoveryConfig(contract, runtime, storeCode);
 
     activity('bootstrap', 'Config resolved', {
         data: resolved.data,
         integrations: resolved.integrations,
-        translations: resolved.translations
+        translations: resolved.translations,
+        storeCode
     });
 
     return Object.freeze(resolved);
@@ -67,7 +68,8 @@ export function readIntegrationConfig(): ReactEdgeRuntimeConfig {
 
 export function resolveIntentDiscoveryConfig(
     widget: IntentDiscoveryWidgetConfig,
-    runtime: ReactEdgeRuntimeConfig
+    runtime: ReactEdgeRuntimeConfig,
+    storeCode: string
 ): ResolvedIntentDiscoveryConfig {
 
     if (
@@ -83,6 +85,7 @@ export function resolveIntentDiscoveryConfig(
             magentoGraphql: runtime.integrations?.magentoGraphql,
             intentApi: runtime.integrations.intentApi
         },
-        translations: widget.translations
+        translations: widget.translations,
+        storeCode
     };
 }

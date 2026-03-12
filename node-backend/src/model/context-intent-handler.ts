@@ -2,16 +2,17 @@ import {AiRecommendationResponse, ModelInput} from "../types/intent-recommendati
 import {AiInterpretationResponse, Attribute, Intent} from "../types/intent-interpretation-context";
 import {OpenaiRecommendationAgent} from "./openai-handler/ai-recommendation-agent";
 import {OpenaiInterpreterAgent} from "./openai-handler/ai-interpreter-agent";
+import {Stores} from "../types/intent-accepted-store";
 
 
 export class ContextIntentHandler {
-    getIntentSuggestions = async (modelInput: ModelInput): Promise<AiRecommendationResponse> => {
+    getIntentSuggestions = async (modelInput: ModelInput, store: Stores = 'uk'): Promise<AiRecommendationResponse> => {
         const openaiAgent = new OpenaiRecommendationAgent()
-        return await openaiAgent.getSuggestion(modelInput);
+        return await openaiAgent.getSuggestion(modelInput, store);
     }
 
-    getFiltersFromIIntent = async (intent: Intent , attributes: Attribute[]): Promise<AiInterpretationResponse> => {
+    getFiltersFromIIntent = async (intent: Intent , attributes: Attribute[], store: Stores = 'uk'): Promise<AiInterpretationResponse> => {
         const openaiAgent = new OpenaiInterpreterAgent()
-        return await openaiAgent.getIntentFilters(intent, attributes);
+        return await openaiAgent.getIntentFilters(intent, attributes, store);
     }
 }

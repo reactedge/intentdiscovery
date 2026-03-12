@@ -3,11 +3,13 @@ import {ContextIntentHandler} from "../model/context-intent-handler";
 import {preScoreProducts} from "../model/context-intent-handler/scoring";
 import {AiRecommendationRequest} from "../types/intent-recommendations-context";
 import {AiInterpretationRequest} from "../types/intent-interpretation-context";
+import {Stores} from "../types/intent-accepted-store";
 
 export class IntentHandler {
     buildContextSuggestion = async (req: Request, res: Response): Promise<void> => {
         try {
             const payload = req.body as AiRecommendationRequest;
+            const store = req.get('Store') as Stores;
 
             if (!payload?.products?.length) {
                 res.json({ suggestions: [], message: "No products to evaluate." });
@@ -26,7 +28,7 @@ export class IntentHandler {
             };
 
             const IntentHandler = new ContextIntentHandler()
-            const suggestions = await IntentHandler.getIntentSuggestions(modelInput);
+            const suggestions = await IntentHandler.getIntentSuggestions(modelInput, store);
 
             res.json(suggestions);
         } catch (err) {
@@ -41,6 +43,7 @@ export class IntentHandler {
     ): Promise<void> => {
         try {
             const body = req.body
+            const store = req.get('Store') as Stores;
 
             if (!this.isValidIntentRequest(body)) {
                 res.status(400).json({
@@ -52,7 +55,7 @@ export class IntentHandler {
             const { intent, attributes } = body
 
             const IntentHandler = new ContextIntentHandler()
-            const filters = await IntentHandler.getFiltersFromIIntent(intent, attributes);
+            const filters = await IntentHandler.getFiltersFromIIntent(intent, attributes, store);
 
             res.json(filters);
         } catch (err) {

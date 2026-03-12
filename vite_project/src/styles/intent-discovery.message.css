@@ -40,3 +40,14 @@
     margin-bottom: 0.6rem;
     color:#666;
 }
+
+.intent-ai-threshold {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+    margin-left: 1rem;
+}
+
+.intent-ai-threshold.ready {
+    color: #2e7d32;
+}

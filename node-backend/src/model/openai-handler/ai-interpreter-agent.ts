@@ -1,12 +1,11 @@
 import {OpenAI} from "openai";
 import {config} from "../../config";
-import {AiRecommendationResponse} from "../../types/intent-recommendations-context";
 import {
-    AiInterpretationRequest,
     AiInterpretationResponse,
     Attribute,
     Intent
 } from "../../types/intent-interpretation-context";
+import {Stores} from "../../types/intent-accepted-store";
 
 const openai = new OpenAI({ apiKey: config.openai.apiKey });
 
@@ -32,7 +31,7 @@ const InterpretationSchema = {
 } as const;
 
 export class OpenaiInterpreterAgent {
-    createPrompt = () => {
+    createPrompt = (store: Stores) => {
         return `You are a product interpretation engine for an e-commerce platform.
 
                 Your task is to translate a shopper's intent into product filters.
@@ -57,10 +56,11 @@ export class OpenaiInterpreterAgent {
                 
                 Important:
                 Each option contains a "label" and a "value".
-                You must return the VALUE of the option, not the label.`
+                You must return the VALUE of the option, not the label.
+                Respond in ${store === 'fr' ? 'French' : 'English'}.`
     }
 
-    async getIntentFilters(intent: Intent, attributes: Attribute[]) {
+    async getIntentFilters(intent: Intent, attributes: Attribute[], store: Stores) {
         try {
 
             const completion = await openai.chat.completions.create({
@@ -73,7 +73,7 @@ export class OpenaiInterpreterAgent {
                 messages: [
                     {
                         role: "system",
-                        content: this.createPrompt()
+                        content: this.createPrompt(store)
                     },
                     {
                         role: "user",

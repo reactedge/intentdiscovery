@@ -1,6 +1,6 @@
-import type {MagentoAggregation, MagentoProducts} from "../hooks/infra/useProductAttributeLayer.tsx";
-import type {OptionLabelMap} from "../state/OptionPreference/type.ts";
-import {useOptionLabelMap} from "../hooks/domain/useOptionLabelMap.ts";
+import type {MagentoAggregation, MagentoProducts} from "../../hooks/infra/useProductAttributeLayer.tsx";
+import type {OptionLabelMap} from "../../state/OptionPreference/type.ts";
+import {useOptionLabelMap} from "../../hooks/domain/useOptionLabelMap.ts";
 
 export type IntentRecord = Record<string, any> | undefined;
 

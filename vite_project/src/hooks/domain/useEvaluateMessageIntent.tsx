@@ -2,12 +2,12 @@ import {useAiInterpreter} from "../infra/useAiInterpreter.tsx";
 import type {MagentoAggregation} from "../infra/useProductAttributeLayer.tsx";
 import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.types.ts";
 import {useIntentAttributes} from "./useIntentAttributes.tsx";
+import type {IntentControllerState} from "../../domain/intent.types.ts";
 
 export function useEvaluateMessageIntent(
     config: IntentDiscoveryDataConfig,
-    intentText: string,
-    aggregations: MagentoAggregation[],
-    enabled: boolean
+    intent: IntentControllerState,
+    aggregations: MagentoAggregation[]
 ) {
     const attributes = useIntentAttributes(aggregations, config)
 
@@ -15,7 +15,7 @@ export function useEvaluateMessageIntent(
         data: aiFilters,
         loading: aiLoading,
         error: aiError,
-    } = useAiInterpreter(attributes, intentText, enabled);
+    } = useAiInterpreter(attributes, intent);
 
     return {
         evaluationFilters: aiFilters,

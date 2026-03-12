@@ -10,11 +10,12 @@ import type {AiInterpretationRequest} from "../../hooks/infra/useAiInterpreter.t
 interface SystemStateProviderProps {
     children: ReactNode;
     config: ReactEdgeRuntimeIntegrations;
+    store: string
 }
 
 const LocalStateProvider = LocalSystemStateContext.Provider;
 
-export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ children, config }) => {
+export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ children, config, store }) => {
     if (!config?.magentoGraphql?.api) {
         throw new Error('GraphQL client cannot be created without API endpoint');
     }
@@ -23,7 +24,7 @@ export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ childr
     }
 
     const graphqlClient = useMemo(
-        () => createGraphqlClient(config.magentoGraphql.api),
+        () => createGraphqlClient(config.magentoGraphql.api, store),
         [config.magentoGraphql?.api]
     );
 
@@ -40,7 +41,7 @@ export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ childr
             suggest: async (payload: AiRecommendationRequest) => {
                 const response = await fetch(`${baseUrl}/intent/suggest`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", "Store": store },
                     body: JSON.stringify(payload),
                 });
 
@@ -53,7 +54,7 @@ export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ childr
             interpret: async (payload: AiInterpretationRequest) => {
                 const response = await fetch(`${baseUrl}/intent/interpret`, {
                     method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { "Content-Type": "application/json", "Store": store },
                     body: JSON.stringify(payload),
                 });
 

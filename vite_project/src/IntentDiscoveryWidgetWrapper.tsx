@@ -16,7 +16,7 @@ export const IntentDiscoveryWidgetWrapper = ({ host }: Props) => {
     if (error) return <ErrorState error={error}  />
     if (loading) return <Spinner />
 
-    return  <SystemStateProvider config={config.integrations}>
+    return  <SystemStateProvider config={config.integrations} store={config.storeCode}>
                 <TranslationStateProvider translations={config.translations}>
                     <IntentLookup config={config} />
                 </TranslationStateProvider>

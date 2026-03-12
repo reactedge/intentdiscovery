@@ -1,9 +1,9 @@
-import { useActiveAttributeState } from "../state/ActiveAttribute/useActiveAttributeState.ts";
+import { useActiveAttributeState } from "../../state/ActiveAttribute/useActiveAttributeState.ts";
 import {
     useSelectedPreferences,
-} from "./selectedPreferencesUtils";
-import type {MagentoProducts} from "../hooks/infra/useProductAttributeLayer.tsx";
-import type {IntentState} from "../integration/intent/types.ts";
+} from "../SelectionsSummary/selectedPreferencesUtils.ts";
+import type {MagentoProducts} from "../../hooks/infra/useProductAttributeLayer.tsx";
+import type {IntentState} from "../../integration/intent/types.ts";
 
 
 type Props = {

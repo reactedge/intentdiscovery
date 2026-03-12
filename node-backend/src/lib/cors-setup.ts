@@ -9,6 +9,7 @@ export const corsOptions = () => {
             'Origin',
             'X-Requested-With',
             'Content-Type',
+            'Store',
             'Accept',
             'X-Access-Token',
         ],
