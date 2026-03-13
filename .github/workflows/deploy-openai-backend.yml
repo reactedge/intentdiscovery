@@ -15,6 +15,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.WIDGET_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+          if [ -z "${{ secrets.WIDGET_SSH_HOST }}" ]; then
+            echo "ERROR: WIDGET_SSH_HOST not set (environment secrets not visible)"
+            exit 1
+          fi
+
+          ssh-keyscan -H "${{ secrets.WIDGET_SSH_HOST }}" >> ~/.ssh/known_hosts
+
       - name: Deploy backend via rsync
         run: |     
           rsync -avzr --delete \
