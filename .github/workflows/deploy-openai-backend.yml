@@ -16,14 +16,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Deploy backend via rsync
-        uses: burnett01/rsync-deployments@7.0
-        with:
-          switches: -avzr --delete
-          path: node-backend/
-          remote_path: /var/www/openai-express/
-          remote_host: ${{ secrets.SERVER_HOST }}
-          remote_user: ${{ secrets.SERVER_USER }}
-          remote_key: ${{ secrets.SERVER_SSH_KEY }}
+        run: |     
+          rsync -avzr --delete \
+            --chown=www-data:www-data \
+            node-backend/ \
+            ${{ secrets.WIDGET_SSH_USER }}@${{ secrets.WIDGET_SSH_HOST }}:/var/www/openai-express/
 
       - name: Install backend dependencies
         run: |
@@ -35,4 +32,4 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no \
           ${{ secrets.SERVER_USER }}@${{ secrets.SERVER_HOST }} \
-          "pm2 restart openai-express || pm2 start /var/www/openai-express/ecosystem.config.js"
+          "pm2 restart openai-express || pm2 start /var/www/openai-express/"
