@@ -1,9 +1,8 @@
-import { useState} from "react";
+import {useState} from "react";
 import {useIntentDecision} from "./useIntentDecision.tsx";
 import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.types.ts";
 import type {MagentoProducts} from "../infra/useProductAttributeLayer.tsx";
 import type {IntentControllerState} from "../../domain/intent.types.ts";
-import {activity} from "../../activity";
 import {useActiveCategory} from "./useActiveCategory.tsx";
 
 export const useIntentController = (
@@ -13,17 +12,13 @@ export const useIntentController = (
     useActiveCategory(attributeLayerData, config);
 
     const [intentText, setIntentText] = useState("");
-    const { shouldSearch, remainingChars, canBeInterpreted } = useIntentDecision(attributeLayerData, config, intentText)
+    const { remainingChars } = useIntentDecision(config, intentText)
 
     const intent: IntentControllerState = {
         text: intentText,
         setIntent: setIntentText,
-        shouldSearch,
-        canBeInterpreted,
         remainingChars
     }
-
-    activity('intent-status', 'Intent Status', intent)
 
     return { intent }
 }

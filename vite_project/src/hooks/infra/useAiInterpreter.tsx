@@ -2,7 +2,6 @@ import {useCallback, useEffect, useState} from "react";
 import {activity} from "../../activity";
 import {useSystemState} from "../../state/System/useSystemState.ts";
 import type {MagentoAggregation} from "./useProductAttributeLayer.tsx";
-import {useDebounce} from "../useDebounce.tsx";
 import {buildAiInterpretationPayload} from "../../lib/ai-recommendations.ts";
 import {useOptionLabelMap} from "../domain/useOptionLabelMap.ts";
 import type {IntentControllerState} from "../../domain/intent.types.ts";
@@ -32,17 +31,15 @@ export function useAiInterpreter(
     intent: IntentControllerState,
 ) {
 
-    const { intentState, setPreference, intentApiClient } = useSystemState()
+    const { intentState, setIntentText, setPreference, intentApiClient } = useSystemState()
 
     const [data, setData] = useState<AiInterpretationResponse | null>(null)
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState<Error | null>(null)
     const optionLabelMap = useOptionLabelMap(attributeData);
 
-    const debouncedIntent = useDebounce(intent.text, 600)
-
     const load = useCallback(async () => {
-        if (!intent.canBeInterpreted || loading) return
+        if (intentState.status === 'idle' || loading) return
 
         setLoading(true)
         setError(null)
@@ -51,17 +48,20 @@ export function useAiInterpreter(
             const payload = buildAiInterpretationPayload(
                 intentState,
                 attributeData,
-                debouncedIntent,
+                intent.text,
                 optionLabelMap
             )
 
             const json = await intentApiClient.interpret(payload)
+            //const json = await intentApiClient.dummy(payload)
 
             activity('ai-interpretation', 'AI interpretation API ran', json)
 
             setData(json)
 
             if (json?.filters) {
+                setIntentText(intent.text)
+
                 for (const [attribute, value] of Object.entries(json?.filters)) {
                     setPreference(attribute, value)
                 }
@@ -79,7 +79,7 @@ export function useAiInterpreter(
             setLoading(false)
         }
 
-    }, [intentState, debouncedIntent, attributeData, optionLabelMap, intent.canBeInterpreted])
+    }, [intent.text, attributeData, optionLabelMap, intentState.status])
 
     useEffect(() => {
         activity('ai-interpretation', 'Triggering interpretation')

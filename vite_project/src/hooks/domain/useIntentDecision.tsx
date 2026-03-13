@@ -1,25 +1,20 @@
-import type {MagentoProducts} from "../infra/useProductAttributeLayer.tsx";
 import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.types.ts";
+import {useDebounce} from "../useDebounce.tsx";
 
 const MIN_TEXT_LENGTH = 50
 
 export const useIntentDecision = (
-    attributeLayerData: MagentoProducts | undefined,
     config: IntentDiscoveryDataConfig,
     intentText: string
 ) => {
 
-    const threshold = config.ai?.matchThreshold ?? MIN_TEXT_LENGTH
-    const total = attributeLayerData?.total_count ?? 0
+    const threshold = config.ai?.activationThreshold ?? MIN_TEXT_LENGTH
+    const debouncedIntent = useDebounce(intentText, 400)
 
-    const text = intentText.trim()
+    const text = debouncedIntent.trim()
     const remainingChars = threshold - text.length;
-    const canBeInterpreted = remainingChars === 0
 
     return {
-        total,
-        shouldSearch: total <= threshold,
-        remainingChars,
-        canBeInterpreted
+        remainingChars
     }
 }

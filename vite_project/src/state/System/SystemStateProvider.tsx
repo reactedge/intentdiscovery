@@ -4,7 +4,7 @@ import {createGraphqlClient} from "../../lib/graphql.ts";
 import type {ReactEdgeRuntimeIntegrations} from "../../domain/intent-discovery.types.ts";
 import {createIntentEngine} from "../../integration/intent/IntentEngine.ts";
 import type {AiRecommendationRequest} from "../../hooks/infra/useAiRecommendations.tsx";
-import type {IntentSignal} from "../../integration/intent/types.ts";
+import type {IntentSignal, IntentStatus} from "../../integration/intent/types.ts";
 import type {AiInterpretationRequest} from "../../hooks/infra/useAiInterpreter.tsx";
 
 interface SystemStateProviderProps {
@@ -63,6 +63,19 @@ export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ childr
                 }
 
                 return response.json();
+            },
+            dummy: async (payload: AiInterpretationRequest) => {
+                const response = await fetch(`${baseUrl}/intent/dummy`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Store": store },
+                    body: JSON.stringify(payload),
+                });
+
+                if (!response.ok) {
+                    throw new Error("Intent API request failed");
+                }
+
+                return response.json();
             }
         };
     }, [config.intentApi?.baseUrl]);
@@ -83,6 +96,20 @@ export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ childr
                 attributeScore
             }
         })
+    }
+
+    const setIntentStatus = (status: IntentStatus) => {
+        setIntentState(prev => ({
+            ...prev,
+            status
+        }))
+    }
+
+    const setIntentText = (text: string) => {
+        setIntentState(prev => ({
+            ...prev,
+            intentText: text
+        }))
     }
 
     const [intentState, setIntentState] = useState(
@@ -113,6 +140,8 @@ export const SystemStateProvider: React.FC<SystemStateProviderProps> = ({ childr
                 intentApiClient,
                 intentEngine,
                 intentState,
+                setIntentText,
+                setIntentStatus,
                 setPreference
             }}
         >

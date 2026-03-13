@@ -2,7 +2,7 @@ import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.type
 import type {CategoryData} from "../../types/infra/magento/category.types.ts";
 import {useIntentLayoutState} from "../../hooks/domain/useIntentLayoutState.tsx";
 import {useIntentController} from "../../hooks/domain/useIntentController.tsx";
-import {EvaluationOverlay} from "../EvaluationOverlay.tsx";
+import {SearchOverlay} from "../SearchOverlay.tsx";
 import {IntentMessage} from "./IntentMessage.tsx";
 import {AttributeLayer} from "./AttributeLayer.tsx";
 import {IntentDiscoveryOptions} from "./IntentDiscoveryOptions.tsx";
@@ -19,15 +19,15 @@ export const IntentDiscoveryLayout = ({ config, categoryData, attributeLayerData
     const {
         showRightColumn,
         setShowRightColumn,
-        isEvaluating,
-        setIsEvaluating
+        isSearching,
+        setIsSearching
     } = useIntentLayoutState()
 
-    const { intent} = useIntentController(attributeLayerData, config)
+    const { intent } = useIntentController(attributeLayerData, config)
 
     return (
         <div className="intent-widget">
-            {isEvaluating && <EvaluationOverlay/>}
+            {isSearching && <SearchOverlay />}
             <div className={showRightColumn ? "re-intent-layout re-intent-layout--two" : "re-intent-layout"}>
                 <div className="re-intent-col re-intent-col--left">
                     <IntentMessage
@@ -38,7 +38,7 @@ export const IntentDiscoveryLayout = ({ config, categoryData, attributeLayerData
                     <AttributeLayer
                         config={config}
                         attributeLayerData={attributeLayerData}
-                        disabled={isEvaluating}
+                        disabled={isSearching}
                     />
                     <IntentDiscoveryOptions
                         config={config}
@@ -49,11 +49,11 @@ export const IntentDiscoveryLayout = ({ config, categoryData, attributeLayerData
 
                 <div className="re-intent-col re-intent-col--right">
                     <ProductRecommendations
+                        config={config}
                         categoryData={categoryData}
                         attributeLayerData={attributeLayerData}
                         search={{
-                            shouldRun: intent.shouldSearch,
-                            setIsEvaluating
+                            setIsSearching
                         }}
                         onVisibilityChange={setShowRightColumn}
                     />

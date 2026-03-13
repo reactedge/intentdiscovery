@@ -5,28 +5,36 @@ import {Spinner} from "../global/Spinner.tsx";
 import {SuggestionContainer} from "../Suggestions/SuggestionContainer.tsx";
 import {useEffect} from "react";
 import {useTranslationState} from "../../state/Translation/useTranslationState.ts";
+import {useIntentSearch} from "../../hooks/domain/useIntentSearch.tsx";
+import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.types.ts";
 
 type Props = {
+    config: IntentDiscoveryDataConfig
     categoryData: CategoryData
     attributeLayerData: MagentoProducts
     search: {
-        shouldRun: boolean
-        setIsEvaluating: (state: boolean) => void
+        setIsSearching: (state: boolean) => void
     }
     onVisibilityChange: (visible: boolean) => void
 }
 
 export const ProductRecommendations = ({
+   config,
    categoryData,
    attributeLayerData,
    search,
    onVisibilityChange
 }: Props) => {
+    const { shouldSearch } = useIntentSearch(
+        attributeLayerData,
+        config
+    )
+
     const { aiRecommendation, searchLoading, error } =
         useAnalyseSearch(
             attributeLayerData?.aggregations,
             categoryData,
-            search.shouldRun
+            shouldSearch
         );
 
     const hasSuggestions = !!aiRecommendation?.suggestions?.length
@@ -37,10 +45,10 @@ export const ProductRecommendations = ({
     }, [hasSuggestions, onVisibilityChange])
 
     useEffect(() => {
-        search.setIsEvaluating(searchLoading);
+        search.setIsSearching(searchLoading);
     }, [searchLoading]);
 
-    if (!search.shouldRun) return null;
+    if (!shouldSearch) return null;
     if (searchLoading) return <Spinner />;
     if (!aiRecommendation?.suggestions?.length) return null;
 

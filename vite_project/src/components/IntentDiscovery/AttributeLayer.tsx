@@ -22,7 +22,7 @@ export const AttributeLayer = ({
     const { setActiveAttributeCode } = useActiveAttributeState();
     const {intentState} = useSystemState()
     const { valueFor: prefValue } =
-        useSelectedPreferences(attributeLayerData, intentState);
+        useSelectedPreferences(attributeLayerData?.aggregations, intentState);
     const {t} = useTranslationState()
 
     const [showAll, setShowAll] = useState(false);

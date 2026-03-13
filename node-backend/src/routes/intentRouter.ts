@@ -20,6 +20,8 @@ export const setupIntentRoutes = (app: Application) => {
 
     router.post("/interpret", intentHandlerController.validateIntentInput)
 
+    router.post("/dummy", intentHandlerController.dummy)
+
     router.options('*', options);
 
     app.use(config.route.intentPrefix, router)

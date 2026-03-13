@@ -33,6 +33,7 @@
     },
     "ai": {
       "enabled": true,
+      "activationThreshold": 30,
       "matchThreshold": 30,
       "minIntentScore": 4,
       "maxProductsForAnalysis": 40
@@ -44,7 +45,10 @@
     "Tell us what matters most for your purchase": "Décrivez ce qui compte le plus pour votre achat",
     "View all": "Afficher tout",
     "Show less": "Afficher moins",
-    "AI suggestions": "Suggestions de l’IA"
+    "AI suggestions": "Suggestions de l’IA",
+    "AI can be activated in %s more characters": "L’IA pourra s’activer dans %s caractères",
+    "AI ready to interpret your request": "L’IA est prête à interpréter votre demande",
+    "Searching your best match…": "Recherche des produits les plus adaptés à votre demande…"
   },
   "integrations": {
     "require": ["magentoGraphql", "intentApi"]

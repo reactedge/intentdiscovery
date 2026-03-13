@@ -47,6 +47,7 @@ export interface IntentDiscoveryDataConfig {
     labelMap?: Record<string, string>;
     ai: {
         "enabled": boolean,
+        "activationThreshold": number,
         "matchThreshold": number,
         "minIntentScore": number,
         "maxProductsForAnalysis": number

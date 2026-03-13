@@ -3,12 +3,12 @@ import {useState} from "react";
 export const useIntentLayoutState = () => {
 
     const [showRightColumn, setShowRightColumn] = useState(false)
-    const [isEvaluating, setIsEvaluating] = useState(false)
+    const [isSearching, setIsSearching] = useState(false)
 
     return {
         showRightColumn,
         setShowRightColumn,
-        isEvaluating,
-        setIsEvaluating
+        isSearching,
+        setIsSearching
     }
 }

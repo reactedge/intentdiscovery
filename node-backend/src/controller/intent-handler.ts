@@ -74,4 +74,40 @@ export class IntentHandler {
         )
     }
 
+    dummy = async (
+        req: Request,
+        res: Response
+    ): Promise<void> => {
+        try {
+            const { intent } = req.body
+            const text: string = intent?.text ?? ""
+
+            const filters: Record<string, string> = {}
+
+            await new Promise(resolve => setTimeout(resolve, 500))
+
+            filters.color = "58"
+            /*filters.climate = "202"
+
+            if (text.includes("red")) {
+                filters.color = "red"
+            }
+
+            if (text.includes("jacket")) {
+                filters.category = "jackets"
+            }
+
+            if (text.includes("hiking")) {
+                filters.activity = "hiking"
+            }*/
+
+            res.json({filters})
+
+        } catch (err) {
+            console.error(err)
+            res.status(500).json({
+                error: "Server error"
+            })
+        }
+    }
 }
