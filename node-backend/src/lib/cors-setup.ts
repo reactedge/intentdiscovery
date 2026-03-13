@@ -4,6 +4,10 @@ const cors = require("cors")
 
 // https://brianflove.com/posts/2017-03-22-express-cors-typescript/
 export const corsOptions = () => {
+    const allowedOrigins = config.frontendUrl
+        .split(',')
+        .map(origin => origin.trim())
+
     const options = {
         allowedHeaders: [
             'Origin',
@@ -15,7 +19,7 @@ export const corsOptions = () => {
         ],
         credentials: true,
         methods: 'GET,HEAD,OPTIONS,PUT,PATCH,POST,DELETE',
-        origin: [config.frontendUrl, config.siteConsumerUrl],
+        origin: allowedOrigins,
         preflightContinue: false,
     };
 

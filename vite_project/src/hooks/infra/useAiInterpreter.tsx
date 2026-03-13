@@ -5,6 +5,7 @@ import type {MagentoAggregation} from "./useProductAttributeLayer.tsx";
 import {buildAiInterpretationPayload} from "../../lib/ai-recommendations.ts";
 import {useOptionLabelMap} from "../domain/useOptionLabelMap.ts";
 import type {IntentControllerState} from "../../domain/intent.types.ts";
+import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.types.ts";
 
 export type AiInterpretationRequest = {
     intent: {
@@ -29,6 +30,7 @@ export type AiInterpretationResponse = {
 export function useAiInterpreter(
     attributeData: MagentoAggregation[],
     intent: IntentControllerState,
+    config: IntentDiscoveryDataConfig
 ) {
 
     const { intentState, setIntentText, setPreference, intentApiClient } = useSystemState()
@@ -49,7 +51,8 @@ export function useAiInterpreter(
                 intentState,
                 attributeData,
                 intent.text,
-                optionLabelMap
+                optionLabelMap,
+                config
             )
 
             const json = await intentApiClient.interpret(payload)

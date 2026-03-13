@@ -11,8 +11,6 @@ export const useIntentSearch = (
     const threshold = config.ai?.matchThreshold ?? MIN_TEXT_LENGTH
     const total = attributeLayerData?.total_count ?? 0
 
-    console.log('useIntentSearch', {total_count: attributeLayerData?.total_count, matchThreshold: config.ai?.matchThreshold})
-
     return {
         total,
         shouldSearch: total <= threshold

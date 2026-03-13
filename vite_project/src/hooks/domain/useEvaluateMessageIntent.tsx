@@ -15,7 +15,7 @@ export function useEvaluateMessageIntent(
         data: aiFilters,
         loading: aiLoading,
         error: aiError,
-    } = useAiInterpreter(attributes, intent);
+    } = useAiInterpreter(attributes, intent, config);
 
     return {
         evaluationFilters: aiFilters,

@@ -4,6 +4,7 @@ import type {IntentState} from "../integration/intent/types.ts";
 import type {AiRecommendationRequest} from "../hooks/infra/useAiRecommendations.tsx";
 import type {MagentoAggregation} from "../hooks/infra/useProductAttributeLayer.tsx";
 import type {AiInterpretationRequest} from "../hooks/infra/useAiInterpreter.tsx";
+import type {IntentDiscoveryDataConfig} from "../domain/intent-discovery.types.ts";
 
 export function buildAiRecommendationPayload(
     intentState: IntentState,
@@ -37,22 +38,27 @@ export function buildAiInterpretationPayload(
     intentState: IntentState,
     aggregations: MagentoAggregation[],
     intentText: string,
-    optionLabelMap: OptionLabelMap
+    optionLabelMap: OptionLabelMap,
+    config: IntentDiscoveryDataConfig
 ): AiInterpretationRequest {
 
     const rawSignals = intentState.attributeScore ?? {};
 
     const signals = buildIntentSignals(rawSignals, optionLabelMap);
 
-    const attributes = aggregations.map(attr => ({
-        code: attr.attribute_code,
-        label: attr.label,
-        options: attr.options.map(option => ({
-            label: option.label,
-            value: option.value,
-            count: option.count
-        }))
-    }));
+    const attributes = aggregations
+        .filter(attr =>
+            !config.attributeExcludedInLayer?.includes(attr.attribute_code)
+        ).
+        map(attr => ({
+            code: attr.attribute_code,
+            label: attr.label,
+            options: attr.options.map(option => ({
+                label: option.label,
+                value: option.value,
+                count: option.count
+            }))
+        }));
 
     return {
         intent: {
