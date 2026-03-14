@@ -31,6 +31,7 @@ jobs:
       - name: Deploy backend via rsync
         run: |     
           rsync -avzr --delete \
+            --exclude=".env" \
             --chown=www-data:www-data \
             node-backend/ \
             ${{ secrets.WIDGET_SSH_USER }}@${{ secrets.WIDGET_SSH_HOST }}:/var/www/openai-express/

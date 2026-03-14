@@ -2,10 +2,12 @@ import type {MagentoProducts} from "../../hooks/infra/useProductAttributeLayer.t
 import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.types.ts";
 import {useTranslationState} from "../../state/Translation/useTranslationState.ts";
 import type {IntentControllerState} from "../../domain/intent.types.ts";
-import {activity} from "../../activity";
 import {buildAiInterpretationPayload} from "../../lib/ai-recommendations.ts";
 import {useSystemState} from "../../state/System/useSystemState.ts";
 import {useOptionLabelMap} from "../../hooks/domain/useOptionLabelMap.ts";
+import {useState} from "react";
+import {sendRequestToAi} from "../../services/message-interpret.ts";
+import {SearchOverlay} from "../SearchOverlay.tsx";
 
 type Props = {
     config: IntentDiscoveryDataConfig,
@@ -18,44 +20,34 @@ export const IntentMessage = ({intent, attributeLayerData, config}: Props) => {
 
     const {t} = useTranslationState()
 
+    const [loading, setLoading] = useState(false)
+
     const handleAsk = async () => {
-        try {
-            const payload = buildAiInterpretationPayload(
-                intentState,
-                attributeLayerData?.aggregations,
-                intent.text,
-                optionLabelMap,
-                config
-            )
+        const payload = buildAiInterpretationPayload(
+            intentState,
+            attributeLayerData?.aggregations,
+            intent.text,
+            optionLabelMap,
+            config
+        )
 
-            const json = await intentApiClient.interpret(payload)
-            //const json = await intentApiClient.dummy(payload)
+        await sendRequestToAi({
+            payload,
+            intentApiClient,
+            setLoading,
+            onSuccess: (json) => {
+                if (!json?.filters) return
 
-            activity('ai-interpretation', 'AI interpretation API ran', json)
-
-            if (json?.filters) {
                 setIntentText(intent.text)
 
                 for (const [attribute, value] of Object.entries(json?.filters)) {
                     setPreference(attribute, value)
                 }
             }
-
-            activity(
-                'intent-evaluated',
-                'Intent evaluated and search triggered'
-            )
-
-        } catch (err) {
-
-            activity(
-                'intent-error',
-                'Intent evaluation failed',
-                { error: err }
-            )
-
-        }
+        })
     }
+
+    if (loading) return <SearchOverlay />
 
     return (
         <div className="finder">

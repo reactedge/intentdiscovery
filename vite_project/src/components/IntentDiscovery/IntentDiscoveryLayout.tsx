@@ -2,7 +2,6 @@ import type {IntentDiscoveryDataConfig} from "../../domain/intent-discovery.type
 import type {CategoryData} from "../../types/infra/magento/category.types.ts";
 import {useIntentLayoutState} from "../../hooks/domain/useIntentLayoutState.tsx";
 import {useIntentController} from "../../hooks/domain/useIntentController.tsx";
-import {SearchOverlay} from "../SearchOverlay.tsx";
 import {IntentMessage} from "./IntentMessage.tsx";
 import {AttributeLayer} from "./AttributeLayer.tsx";
 import {IntentDiscoveryOptions} from "./IntentDiscoveryOptions.tsx";
@@ -27,7 +26,6 @@ export const IntentDiscoveryLayout = ({ config, categoryData, attributeLayerData
 
     return (
         <div className="intent-widget">
-            {isSearching && <SearchOverlay />}
             <div className={showRightColumn ? "re-intent-layout re-intent-layout--two" : "re-intent-layout"}>
                 <div className="re-intent-col re-intent-col--left">
                     <IntentMessage
